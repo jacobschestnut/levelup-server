@@ -1,0 +1,35 @@
+[
+    {
+        "model": "levelupapi.event",
+        "pk": 1,
+        "fields": {
+            "game": 1,
+            "description": "Game Night 1",
+            "date": "Hasbro",
+            "time": 1,
+            "organizer": 1
+        }
+    },
+    {
+        "model": "levelupapi.event",
+        "pk": 2,
+        "fields": {
+            "game": 2,
+            "description": "Game Night 2",
+            "date": "Hasbro",
+            "time": 1,
+            "organizer": 1
+        }
+    },
+    {
+        "model": "levelupapi.event",
+        "pk": 3,
+        "fields": {
+            "game": 3,
+            "description": "Game Night 3",
+            "date": "Hasbro",
+            "time": 1,
+            "organizer": 1
+        }
+    }
+]
