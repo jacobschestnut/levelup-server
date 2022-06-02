@@ -5,8 +5,8 @@
         "fields": {
             "game": 1,
             "description": "Game Night 1",
-            "date": "Hasbro",
-            "time": 1,
+            "date": "2022-06-02",
+            "time": "15:00:00",
             "organizer": 1
         }
     },
@@ -16,8 +16,8 @@
         "fields": {
             "game": 2,
             "description": "Game Night 2",
-            "date": "Hasbro",
-            "time": 1,
+            "date": "2022-06-02",
+            "time": "13:00:00",
             "organizer": 1
         }
     },
@@ -27,8 +27,8 @@
         "fields": {
             "game": 3,
             "description": "Game Night 3",
-            "date": "Hasbro",
-            "time": 1,
+            "date": "2022-06-02",
+            "time": "11:00:00",
             "organizer": 1
         }
     }
