@@ -2,7 +2,7 @@
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import serializers
+from rest_framework import serializers, status
 from levelupapi.models import Event, game
 
 
@@ -15,10 +15,12 @@ class EventView(ViewSet):
         Returns:
             Response -- JSON serialized game type
         """
-        
-        event = Event.objects.get(pk=pk)
-        serializer = EventSerializer(event)
-        return Response(serializer.data)
+        try:
+            event = Event.objects.get(pk=pk)
+            serializer = EventSerializer(event)
+            return Response(serializer.data)
+        except Event.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
     
 
     def list(self, request):
@@ -42,3 +44,4 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id', 'game', 'description', 'date', 'time', 'organizer')
+        depth = 2

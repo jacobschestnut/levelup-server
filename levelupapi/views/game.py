@@ -15,10 +15,12 @@ class GameView(ViewSet):
         Returns:
             Response -- JSON serialized game
         """
-        
-        game_type = Game.objects.get(pk=pk)
-        serializer = GameSerializer(game_type)
-        return Response(serializer.data)
+        try:
+            game_type = Game.objects.get(pk=pk)
+            serializer = GameSerializer(game_type)
+            return Response(serializer.data)
+        except Game.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
     
 
     def list(self, request):
@@ -42,3 +44,4 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'game_type', 'title', 'maker', 'gamer', 'number_of_players', 'skill_level')
+        depth = 1
