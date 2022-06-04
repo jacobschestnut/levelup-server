@@ -29,6 +29,9 @@ class GameView(ViewSet):
         """
         
         games = Game.objects.all()
+        game_type = request.query_params.get('gametype', None)
+        if game_type is not None:
+            games = games.filter(game_type_id=game_type)
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
     
