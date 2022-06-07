@@ -1,9 +1,10 @@
 """View module for handling requests about game types"""
+from datetime import date
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from levelupapi.models import Event, game
+from levelupapi.models import Event, Game, Gamer
 
 
 class EventView(ViewSet):
@@ -36,12 +37,29 @@ class EventView(ViewSet):
             events = events.filter(game_id=game)
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
+    
+    def create(self, request):
+        """Handle POST operations
+
+        Returns:
+            Response -- JSON serialized event instance
+        """
+        organizer = Gamer.objects.get(user=request.auth.user)
+        serializer = CreateEventSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(organizer=organizer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     
 class EventSerializer(serializers.ModelSerializer):
-    """JSON serializer for game types
+    """JSON serializer for events
     """
     class Meta:
         model = Event
         fields = ('id', 'game', 'description', 'date', 'time', 'organizer')
         depth = 2
+        
+class CreateEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('id', 'game', 'description', 'date', 'time')
