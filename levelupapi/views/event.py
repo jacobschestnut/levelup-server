@@ -1,10 +1,11 @@
 """View module for handling requests about game types"""
 from datetime import date
 from django.http import HttpResponseServerError
+from rest_framework.decorators import action
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from levelupapi.models import Event, Game, Gamer, game
+from levelupapi.models import Event, Gamer
 
 
 class EventView(ViewSet):
@@ -50,28 +51,6 @@ class EventView(ViewSet):
         serializer.save(organizer=organizer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-    # def update(self, request, pk):
-    #     """Handle PUT requests for an event
-
-    #     Returns:
-    #         Response -- Empty body with 204 status code
-    #     """
-
-    #     event = Event.objects.get(pk=pk)
-    #     event.description = request.data["description"]
-    #     event.date = request.data["date"]
-    #     event.time = request.data["time"]
-
-    #     game = Game.objects.get(pk=request.data["game"])
-    #     event.game = game
-        
-    #     organizer = Gamer.objects.get(pk=request.data["organizer"])
-    #     event.organizer = organizer
-        
-    #     event.save()
-
-    #     return Response(None, status=status.HTTP_204_NO_CONTENT)
-    
     def update(self, request, pk):
         """Handle PUT requests for an event
 
@@ -83,6 +62,21 @@ class EventView(ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
+    def destroy(self, request, pk):
+        event = Event.objects.get(pk=pk)
+        event.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
+    @action(methods=['post'], detail=True)
+    def signup(self, request, pk):
+        """Post request for a user to sign up for an event"""
+    
+        gamer = Gamer.objects.get(user=request.auth.user)
+        event = Event.objects.get(pk=pk)
+        event.attendees.add(gamer)
+        return Response({'message': 'Gamer added'}, status=status.HTTP_201_CREATED)
+
 
     
 class EventSerializer(serializers.ModelSerializer):
