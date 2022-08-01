@@ -38,6 +38,18 @@ class GameView(ViewSet):
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
     
+    # def create(self, request):
+    #     """Handle POST operations
+
+    #     Returns:
+    #         Response -- JSON serialized game instance
+    #     """
+    #     gamer = Gamer.objects.get(user=request.auth.user)
+    #     serializer = CreateGameSerializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save(gamer=gamer)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
     def create(self, request):
         """Handle POST operations
 
@@ -47,8 +59,9 @@ class GameView(ViewSet):
         gamer = Gamer.objects.get(user=request.auth.user)
         serializer = CreateGameSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(gamer=gamer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        game = serializer.save(gamer=gamer)
+        res_serializer = GameSerializer(game)
+        return Response(res_serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, pk):
         """Handle PUT requests for a game
